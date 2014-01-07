@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>Upload Picture</title>
+<%= erb :menu %>
+</head>
+  <body>
+    <h1> Upload Picture</h1>
+    <form method='post' enctype='multipart/form-data'>
+		<label for="myfile">File</label>
+      <input type='file' name='myfile' required>
+      <br>
+	  <label for="pic_desc">Description</label>
+	  <input type='text' name='pic_desc' required>
+      <br>
+      <input type='submit' value='Upload'>
+	  </form>
+	  </body>
+</html>
