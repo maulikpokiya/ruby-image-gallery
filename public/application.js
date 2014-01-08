@@ -1,7 +1,7 @@
 $(".forms").hide(); // hide both forms at start
 $("ul li a").click(function(){
 	var idToShow = $(this).attr("href");
-	$(idToShow).show().siblings(".forms").hide();
+	$(idToShow).toggle().siblings(".forms").hide();
 	return false;	// do not navigate to the beginning of form
 });
 $("#sign_up_confirmation").keyup(function(){

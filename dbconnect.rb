@@ -13,7 +13,7 @@ class PostgresDirect
   # live and apparently cannot be removed, at least not very easily.  There is apparently a significant
   # performance improvement using prepared statements.
   def prepareInsertPictureStatement
-    @conn.prepare("insert_picture", "insert into image_store (name, pdesc) values ($1, $2)")
+    @conn.prepare("insert_picture", "INSERT INTO image_store (name, pdesc) VALUES ($1, $2)")
   end
   
   # Add a picture with the prepared statement.
@@ -32,7 +32,7 @@ class PostgresDirect
 
   # Get images by keyword 
   def searchImageTable(search)
-    @conn.exec( "SELECT name FROM image_store where position('"+search+"' in pdesc) != 0" ) do |result|
+    @conn.exec( "SELECT name FROM image_store WHERE POSITION('"+search+"' IN pdesc) != 0" ) do |result|
       result.each do |row|
         yield row if block_given?
       end
@@ -41,7 +41,7 @@ class PostgresDirect
 
   # Check user login credentials 
   def valiateUser(uname, upass)
-    @conn.exec( "SELECT name FROM user_login where name='#{uname}' and upass='#{upass}'" ) do |result|
+    @conn.exec( "SELECT name FROM user_login WHERE name='#{uname}' AND upass='#{upass}'" ) do |result|
       result.each do |row|
         @user = row['name']
       end
@@ -50,8 +50,10 @@ class PostgresDirect
   end
 
   def prepareInsertUserStatement(uname, upass)
-    @conn.prepare("insert_user", "insert into user_login (name, upass) values ($1, $2)")
-	@conn.exec_prepared("insert_user", [uname, upass])
+    @conn.prepare("insert_user", "INSERT INTO user_login (name, upass) VALUES ($1, $2)")
+	if(@conn.exec_prepared("insert_user", [uname, upass])) then
+		return true
+	end
   end
 
   # Disconnect the back-end connection.

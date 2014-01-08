@@ -3,12 +3,27 @@ require 'sinatra/reloader' if development?
 require './dbconnect'
 #set :public_folder, 'assets'
 
-def load_pictures
-  Dir.glob("public/pictures/*.{jpg}")
+configure do
+	enable :sessions, :logging
+	set :session_secret, 'itssecretandhardtoguess'
+end
+
+def setSession(uname)
+	session[:user] = uname
+end
+
+def getSession
+	@user = session[:user].inspect
+	return @user
+end
+
+def loadPictures
+	Dir.glob("public/pictures/*.{jpg}")
 end
 
 get '/' do 
-	@pictures = load_pictures
+	session.clear
+	@pictures = loadPictures
 	erb :register
 end
 
@@ -19,16 +34,18 @@ post '/signUp' do
 	u.connect
 
 	begin
-		u.prepareInsertUserStatement(@uname, @upwd)
-#		u.insertUser(@uname, @upwd)
-		rescue Exception => e
-			puts e.message
-			puts e.backtrace.inspect
-		ensure
-			u.disconnect
+		if (u.prepareInsertUserStatement(@uname, @upwd)) then
+			setSession(@uname)
+			redirect '/home'
+		else
+			"Error in user insert"
+		end
+	rescue Exception => e
+		puts e.message
+		puts e.backtrace.inspect
+	ensure
+		u.disconnect
 	end
-
-	redirect '/home'
 end
 
 post '/signIn' do 
@@ -39,15 +56,15 @@ post '/signIn' do
 
 	begin
 		@user = s.valiateUser(@uname, @upwd)
-		
-		rescue Exception => e
-			puts e.message
-			puts e.backtrace.inspect
-		ensure
-			s.disconnect
+	rescue Exception => e
+		puts e.message
+		puts e.backtrace.inspect
+	ensure
+		s.disconnect
 	end
 
 	if (@user != nil) then
+		setSession(@user)
 		redirect '/home'
 	else
 		redirect '/'
@@ -56,17 +73,21 @@ end
 
 get '/home' do
 	@pictures = []
+	@user = getSession
+
 	p = PostgresDirect.new()
 	p.connect
+
 	begin
-	p.queryImageTable {|row| @pictures << row['name']}
+		p.queryImageTable {|row| @pictures << row['name']}
 	rescue Exception => e
-    puts e.message
-    puts e.backtrace.inspect
+		puts e.message
+		puts e.backtrace.inspect
 	ensure
-    p.disconnect
+		p.disconnect
 	end
-  erb :index
+
+	erb :index
 end
 
 # Handle GET-request (Show the upload form)
@@ -77,46 +98,55 @@ end
 # Handle POST-request (Receive and save the uploaded file)
 post "/upload" do 
 	begin
-	@new_name = rand(1000000)
-	@path = 'public/pictures/' +@new_name.to_s+'.jpg'
+		@new_name = rand(1000000)
+		@path = 'public/pictures/' +@new_name.to_s+'.jpg'
 	end while(File.exist?(@path))
+
 	@pdesc = params['pic_desc']
+	
 	File.open(@path, "wb") do |f|
-#  File.open('public/pictures/' + params['myfile'][:filename], "wb") do |f|
-    f.write(params['myfile'][:tempfile].read)
+		#  File.open('public/pictures/' + params['myfile'][:filename], "wb") do |f|
+		f.write(params['myfile'][:tempfile].read)
 	end
+
 	l = PostgresDirect.new()
 	l.connect
+	
 	begin
-	l.prepareInsertPictureStatement
-    l.executeinsert(@path, @pdesc)
+		l.prepareInsertPictureStatement
+		l.executeinsert(@path, @pdesc)
 	rescue Exception => e
-    puts e.message
-    puts e.backtrace.inspect
+		puts e.message
+		puts e.backtrace.inspect
 	ensure
-    l.disconnect
+		l.disconnect
 	end
+
 	redirect '/home'
 #  return "The file was successfully uploaded!"
 end
 
 get "/public/picture/:image.to_s" do
-redirect '/picture/:image'
+	redirect '/picture/:image'
 end
 
 post '/search' do
-#  @pictures = load_pictures
+
 	@pictures = []
+	@user = getSession
 	@keyword = params['imgSeach']
+
 	r = PostgresDirect.new()
 	r.connect
+
 	begin
-	r.searchImageTable(@keyword) {|row| @pictures << row['name']}
+		r.searchImageTable(@keyword) {|row| @pictures << row['name']}
 	rescue Exception => e
-    puts e.message
-    puts e.backtrace.inspect
+		puts e.message
+		puts e.backtrace.inspect
 	ensure
-    r.disconnect
+		r.disconnect
 	end
-  erb :index
+
+	erb :index
 end
