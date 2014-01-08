@@ -4,6 +4,8 @@ class PostgresDirect
   # Create the connection instance.
   def connect
     @conn = PG.connect(
+		:hostaddr=>"192.168.56.1", 
+		:port=>5432,
         :dbname => 'Picshare',
         :user => 'postgres',
         :password => 'Admin')
