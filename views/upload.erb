@@ -2,18 +2,26 @@
 <html>
 	<head>
 		<title>Upload Picture</title>
-		<%= erb :menu %>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/application.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/styles.css" charset="utf-8" />
 	</head>
 	<body>
-		<h2> Upload Picture</h2>
-		<form method='post' enctype='multipart/form-data'>
-			<label for="myfile">File</label>
-			<input type='file' name='myfile' required>
-			<br>
-			<label for="pic_desc">Description</label>
-			<input type='text' name='pic_desc' required>
-			<br>
-			<input type='submit' value='Upload'>
-		</form>
+		<div class="header-text">
+			<h1>Picture Gallary</h1>
+			<%= erb :menu %>
+			<h2> Upload Picture</h2>
+		</div>
+		<div class="upload-form">
+			<form method='post' enctype='multipart/form-data'>
+				<label for="myfile">File</label>
+				<input type='file' name='myfile' required>
+				<br>
+				<label for="pic_desc">Description</label>
+				<input type='text' name='pic_desc' required>
+				<br>
+				<input type='submit' value='Upload' style="allign:center">
+			</form>
+		</div>
 	</body>
 </html>

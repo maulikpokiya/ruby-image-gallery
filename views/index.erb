@@ -4,12 +4,52 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="user-scalable=yes, width=device-width" />
 		<title>Picture Gallary</title>
-		<%= erb :menu %>
+		
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/fancybox/source/jquery.fancybox.js"></script>
+		<script type="text/javascript" src="js/application.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/styles.css" charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="js/fancybox/source/jquery.fancybox.css" media="screen" />
+
+		<script type="text/javascript">
+			// Popup window code
+			$(document).ready(function() {
+				/*$("#images-container a").fancybox({
+					  helpers: {
+						  title : {
+							  type : 'inside'
+						  }
+					  }
+				  });*/
+
+				  $("#images-container a").fancybox({
+						maxWidth	: 800,
+						maxHeight	: 600,
+						fitToView	: false,
+						width		: '70%',
+						height		: '70%',
+						autoSize	: true,
+						closeClick	: false,
+						openEffect	: 'none',
+						closeEffect	: 'none'
+						//type: 'inside'
+					});
+
+			});
+		</script>
 	</head>
 	<body>
-		<h2> Welcome <%= @user %></h2>
+		<div class="header-text">
+			<h1>Picture Gallary</h1>
+			<%= erb :menu %>
+			<h2> Welcome <%= @user %></h2>
+		</div>
+		<div id="images-container" style="max-height:100px;margin:5px;">
 		<% @pictures.each do |picture| %>
-		<a href="<%= picture.sub(/public\//,'') %>" target="_blank"><img src="<%= picture.sub(/public\//, '') %>" width=200 height=200 /></a>
+			<a href="<%= picture['name'].sub(/public\//,'') %>" title="<%= picture['pdesc'] %>">
+				<img src="<%= picture['name'].sub(/public\//, '') %>" width=200 height=200 />
+			</a>
 		<% end %>
+		</div>
 	</body>
 </html>

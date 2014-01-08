@@ -1,0 +1,73 @@
+.register-page {
+	width: 700px;
+	margin: auto;
+}
+
+.register-page ul, p, h2, h1 {
+	font-family: Arial, sans-serif;
+	padding: 0px;
+}
+
+.register-page ul li {
+	display:inline-block;
+}
+
+.register-page ul li a {
+	background: #333333;
+	color: #ffffff;
+	padding:10px;
+	text-decoration: none;
+}
+
+.register-page ul li a:hover {
+	text-decoration: underline;
+}
+
+.register-page label {
+	width: 200px;
+	display: inline-block;
+}
+
+.header-text p, h2, h1 {
+	font-family: times, sans-serif;
+	padding: 0px;
+}
+
+input.error {
+	border: 5px solid #ff0000;
+}
+
+nav ul li a:hover {
+	text-decoration: underline;
+}
+		
+nav {
+	background: #444444;
+	color: #ffffff;
+	font-weight: bold;
+}
+
+nav ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	background: #444;
+	overflow: hidden;
+}
+
+nav li {
+	float: left;
+}
+
+nav a {
+	text-decoration: none;
+	display: block;
+	padding: 8px;
+	background: #444;
+	color: #fff;
+}
+
+.upload-form label {
+	width: 100px;
+	display: inline-block;
+}

@@ -23,7 +23,7 @@ class PostgresDirect
   
   # Get all images
   def queryImageTable
-    @conn.exec( "SELECT name FROM image_store" ) do |result|
+    @conn.exec( "SELECT name,pdesc FROM image_store" ) do |result|
       result.each do |row|
         yield row if block_given?
       end
