@@ -4,11 +4,11 @@ class PostgresDirect
   # Create the connection instance.
   def connect
     @conn = PG.connect(
-		:hostaddr=>"192.168.56.1", 
+		:hostaddr=>"ec2-54-197-250-52.compute-1.amazonaws.com", 
 		:port=>5432,
-        :dbname => 'Picshare',
-        :user => 'postgres',
-        :password => 'Admin')
+        :dbname => 'd53v7tpc57laqn',
+        :user => 'gomqmrjpngrpot',
+        :password => 'oaQVlqftXW1Y_fMZqhOdUjCh3P')
   end
 
   # Prepared statements prevent SQL injection attacks.  However, for the connection, the prepared statements
