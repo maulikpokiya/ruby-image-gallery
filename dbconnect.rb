@@ -3,10 +3,12 @@ require 'pg'
 class PostgresDirect
   # Create the connection instance.
   def connect
-    @conn = PG.connect(
-        :dbname => 'Picshare',
-        :user => 'postgres',
-        :password => 'Admin')
+	uri = URI.parse(ENV['DATABASE_URL'])
+	@conn = PG.connect(uri.hostname, uri.port, nil, nil, uri.path[1..-1], uri.user, uri.password)
+#    @conn = PG.connect(
+#        :dbname => 'Picshare',
+#        :user => 'postgres',
+#        :password => 'Admin')
   end
 
   # Prepared statements prevent SQL injection attacks.  However, for the connection, the prepared statements
